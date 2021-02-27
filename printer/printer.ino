@@ -81,7 +81,6 @@ void loop() {
       chan1_target = input.substring(2, 7).toInt();
       chan2_target = input.substring(9, 14).toInt();
       chan3_target = input.substring(16, 21).toInt();
-
       delay_target = input.substring(22, 25).toInt();
       
       if (chan1_target > chan1_pos) {
@@ -97,29 +96,6 @@ void loop() {
       } else { chan3_dir = 1; }
 
       state = driving;
-      
-      // Serial.print("chan1_pos: ");
-      // Serial.print(chan1_pos);
-      // Serial.print(", chan1_target: ");
-      // Serial.print(chan1_target);
-      // Serial.print(", chan1_dir: ");
-      // Serial.println(chan1_dir);
-      
-      // Serial.print("chan2_pos: ");
-      // Serial.print(chan2_pos);
-      // Serial.print(", chan2_target: ");
-      // Serial.print(chan2_target);
-      // Serial.print(", chan2_dir: ");
-      // Serial.println(chan2_dir);
-      
-      // Serial.print("chan3_pos: ");
-      // Serial.print(chan3_pos);
-      // Serial.print(", chan3_target: ");
-      // Serial.print(chan3_target);
-      // Serial.print(", chan3_dir: ");
-      // Serial.println(chan3_dir);
-
-      // Serial.print(chan);
     }
 
   } else if (state == driving) {
@@ -131,9 +107,6 @@ void loop() {
       digitalWrite(step1, chan1_step);
       if (chan1_dir) { chan1_pos--; }
       else { chan1_pos++; }
-      
-//      if (chan1_step) { Serial.print("^"); }
-//      else { Serial.print("v"); }
     }
     
     // Drive Channel 2
@@ -143,9 +116,6 @@ void loop() {
       digitalWrite(step2, chan2_step);
       if (chan2_dir) { chan2_pos--; }
       else { chan2_pos++; }
-      
-//      if (chan2_step) { Serial.print("^"); }
-//      else { Serial.print("v"); }
     }
     
     // Drive Channel 3
@@ -155,17 +125,12 @@ void loop() {
       digitalWrite(step3, chan3_step);
       if (chan3_dir) { chan3_pos--; }
       else { chan3_pos++; }
-
-//      if (chan3_step) { Serial.print("^"); }
-//      else { Serial.print("v"); }
     }
-
 
     if (chan1_pos == chan1_target && 
         chan2_pos == chan2_target && 
         chan3_pos == chan3_target) {
       state = idle;
-//      Serial.println(" done");
       endSignal();
     }
     

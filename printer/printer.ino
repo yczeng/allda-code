@@ -26,6 +26,8 @@ int chan3_pos = 0;
 int chan3_target = 0;
 int chan3_dir = 0;
 
+int delay_target = 10;
+
 void endSignal(){
   Serial.println("$");
 }
@@ -74,61 +76,50 @@ void loop() {
     String input = Serial.readStringUntil('$');
        
     // for controlling channel, pos
-    // example input: POSc1p00050
-    if (input.substring(0, 3) == "POS"){
-      int chan = input.substring(4, 5).toInt();
-      int pos = input.substring(6, 11).toInt();
+    // example input: C100050_C200050_C300050_D000 (the underscores are spacers only)
+    if (input.substring(0, 1) == "C"){
+      chan1_target = input.substring(2, 7).toInt();
+      chan2_target = input.substring(9, 14).toInt();
+      chan3_target = input.substring(16, 21).toInt();
 
-      Serial.print("chan: ");
-      Serial.println(chan);
+      delay_target = input.substring(22, 25).toInt();
+      
+      if (chan1_target > chan1_pos) {
+        chan1_dir = 0;
+      } else { chan1_dir = 1; }
+          
+      if (chan2_target > chan2_pos) {
+        chan2_dir = 0;
+      } else { chan2_dir = 1; }
+          
+      if (chan3_target > chan3_pos) {
+        chan3_dir = 0;
+      } else { chan3_dir = 1; }
 
-      if (chan == 1) {
-          chan1_target = pos;
-          if (chan1_target > chan1_pos) {
-            chan1_dir = 0;
-          } else { chan1_dir = 1; }
-          
-      } else if (chan == 2) {
-          chan2_target = pos;
-          if (chan2_target > chan2_pos) {
-            chan2_dir = 0;
-          } else { chan2_dir = 1; }
-          
-      } else if (chan == 3) {
-          chan3_target = pos;
-          if (chan3_target > chan3_pos) {
-            chan3_dir = 0;
-          } else { chan3_dir = 1; }
-      }
       state = driving;
       
-      Serial.print("chan1_pos: ");
-      Serial.print(chan1_pos);
-      Serial.print(", chan1_target: ");
-      Serial.print(chan1_target);
-      Serial.print(", chan1_dir: ");
-      Serial.println(chan1_dir);
+      // Serial.print("chan1_pos: ");
+      // Serial.print(chan1_pos);
+      // Serial.print(", chan1_target: ");
+      // Serial.print(chan1_target);
+      // Serial.print(", chan1_dir: ");
+      // Serial.println(chan1_dir);
       
-      Serial.print("chan2_pos: ");
-      Serial.print(chan2_pos);
-      Serial.print(", chan2_target: ");
-      Serial.print(chan2_target);
-      Serial.print(", chan2_dir: ");
-      Serial.println(chan2_dir);
+      // Serial.print("chan2_pos: ");
+      // Serial.print(chan2_pos);
+      // Serial.print(", chan2_target: ");
+      // Serial.print(chan2_target);
+      // Serial.print(", chan2_dir: ");
+      // Serial.println(chan2_dir);
       
-      Serial.print("chan3_pos: ");
-      Serial.print(chan3_pos);
-      Serial.print(", chan3_target: ");
-      Serial.print(chan3_target);
-      Serial.print(", chan3_dir: ");
-      Serial.println(chan3_dir);
+      // Serial.print("chan3_pos: ");
+      // Serial.print(chan3_pos);
+      // Serial.print(", chan3_target: ");
+      // Serial.print(chan3_target);
+      // Serial.print(", chan3_dir: ");
+      // Serial.println(chan3_dir);
 
-      Serial.print(chan);
-    }
-    
-    // for reading pressure
-    else if (input == "PRES"){
-      Serial.println("INSERT THE PRESSURE READING HERE");
+      // Serial.print(chan);
     }
 
   } else if (state == driving) {
@@ -141,8 +132,8 @@ void loop() {
       if (chan1_dir) { chan1_pos--; }
       else { chan1_pos++; }
       
-      if (chan1_step) { Serial.print("^"); }
-      else { Serial.print("v"); }
+//      if (chan1_step) { Serial.print("^"); }
+//      else { Serial.print("v"); }
     }
     
     // Drive Channel 2
@@ -153,8 +144,8 @@ void loop() {
       if (chan2_dir) { chan2_pos--; }
       else { chan2_pos++; }
       
-      if (chan2_step) { Serial.print("^"); }
-      else { Serial.print("v"); }
+//      if (chan2_step) { Serial.print("^"); }
+//      else { Serial.print("v"); }
     }
     
     // Drive Channel 3
@@ -165,8 +156,8 @@ void loop() {
       if (chan3_dir) { chan3_pos--; }
       else { chan3_pos++; }
 
-      if (chan3_step) { Serial.print("^"); }
-      else { Serial.print("v"); }
+//      if (chan3_step) { Serial.print("^"); }
+//      else { Serial.print("v"); }
     }
 
 
@@ -174,10 +165,10 @@ void loop() {
         chan2_pos == chan2_target && 
         chan3_pos == chan3_target) {
       state = idle;
-      Serial.println(" done");
+//      Serial.println(" done");
       endSignal();
     }
     
-    delayMicroseconds(30);
+    delayMicroseconds(delay_target);
   }
 }
